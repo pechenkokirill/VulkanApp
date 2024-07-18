@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="glfw-net" Version="3.3.1" />
+		<PackageReference Include="VulkanSharp" Version="0.1.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Libs\glfw.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<TargetPath>glfw.dll</TargetPath>
+		</None>
+		<_Shaders Include="shaders/*.*" />
+	</ItemGroup>
+	
+	<Target Name="BeforeBuild2" BeforeTargets="Build">
+		<Message Importance="High" Text="glslc $(ProjectDir)%(_Shaders.Identity) -o $(ProjectDir)$(OutputPath)shaders\$([System.IO.Path]::GetFileNameWithoutExtension('%(_Shaders.Identity)')).spv" />
+		<MakeDir Directories="$(ProjectDir)$(OutputPath)shaders;" />
+		<Exec Command="glslc $(ProjectDir)%(_Shaders.Identity) -o $(ProjectDir)$(OutputPath)shaders\$([System.IO.Path]::GetFileNameWithoutExtension('%(_Shaders.Identity)')).spv" />
+	</Target>
+	
+</Project>
